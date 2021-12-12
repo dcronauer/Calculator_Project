@@ -38,6 +38,9 @@ class Calculator_Gui:
         self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
         self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
 
+        #keyboard bind upon hitting enter run self.calculate_event
+        self.memory_box.bind('<Return>', self.calculate_event)
+
         #pack display frame
         self.memory_box.pack()
         self.memory_box2.pack()
@@ -81,7 +84,7 @@ class Calculator_Gui:
         self.button_decimal = ttk.Button(self.number0_frame,text='.',command=self.decimal)
 
         #create key bind for button_equal to run when enter is hit on keyboard
-        self.button_equal.bind('<Enter>')
+        
 
         #pack the buttons0
         self.button_equal.pack(side='left')
@@ -153,6 +156,12 @@ class Calculator_Gui:
             self.memory.set(str(result))
             self.memory2.set("")
             self.operator.set('')    
+    def calculate_event(self,event):
+        if self.operator.get() == '+':
+            result = float(self.memory.get()) + float(self.memory2.get())
+            self.memory.set(str(result))
+            self.memory2.set("")
+            self.operator.set('')            
 if __name__ == "__main__":
     main()
 

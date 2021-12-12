@@ -17,8 +17,10 @@ class Calculator_Gui:
         self.main_window = tkinter.Tk()
         self.create_objects()
 
+
     def create_objects(self):
         #create frames
+        self.clear_frame = ttk.Frame(self.main_window)
         self.display_frame = tkinter.Frame(self.main_window)
         self.number123_frame = tkinter.Frame(self.main_window)
         self.number456_frame = tkinter.Frame(self.main_window)
@@ -73,11 +75,18 @@ class Calculator_Gui:
         self.button9.pack(side="left")
         
         
-        #create the buttons 0 c .
+        #create the buttons 0 equal .
         self.button0 = ttk.Button(self.number0_frame,text="0",command=self.button_0)
+        self.button_equal =ttk.Button(self.number0_frame,text="=",command=self.calculate)
+        self.button_decimal = ttk.Button(self.number0_frame,text='.',command=self.decimal)
+
+        #create key bind for button_equal to run when enter is hit on keyboard
+        self.button_equal.bind('<Enter>')
 
         #pack the buttons0
+        self.button_equal.pack(side='left')
         self.button0.pack(side="left")
+        self.button_decimal.pack(side="left")
 
         #create the operator buttons + - * /
         
@@ -94,6 +103,7 @@ class Calculator_Gui:
         self.number0_frame.pack()
         self.operations_frame.pack()
         self.functional_frame.pack()
+        self.memory_box.focus()
     #add a number to entry widget based on hitting one of the calculator buttons
     def button_1(self):
         string = self.memory.get() + "1"
@@ -125,10 +135,24 @@ class Calculator_Gui:
     def button_0(self):
         string = self.memory.get() + "0"
         self.memory.set(string)
+    def decimal(self):
+        string = self.memory.get() + "."
+        self.memory.set(string)
+    
+    #operator functions
     def add(self):
-        first_digit = float(self.memory.get())
-        self.memory2.set(first_digit)
-        self.operator.set('+')
+        if self.memory.get() != '':
+            first_digit = float(self.memory.get())
+            self.memory2.set(first_digit)
+            self.operator.set('+')
+            self.memory.set('')
+            self.memory_box.focus()
+    def calculate(self):
+        if self.operator.get() == '+':
+            result = float(self.memory.get()) + float(self.memory2.get())
+            self.memory.set(str(result))
+            self.memory2.set("")
+            self.operator.set('')    
 if __name__ == "__main__":
     main()
 

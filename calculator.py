@@ -3,6 +3,7 @@
 #import tkinter and tkk
 import tkinter
 from tkinter import ttk
+from tkinter.constants import END, FALSE
 
 #main function will create gui window, objects, start mainloop
 def main():
@@ -18,12 +19,9 @@ class Calculator_Gui:
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
-        self.reg = self.main_window.register(self.check_digit)
+        #self.reg = self.main_window.register(self.check_digit)
         self.create_objects()
-        self.memory_box.bind('+', lambda event: self.add())
-        self.memory_box.bind('-', lambda event: self.minus())
-        self.memory_box.bind('*', lambda event: self.multiply())
-        self.memory_box.bind('/', lambda event: self.divide())
+        
        
     def create_objects(self):
         #create frames
@@ -37,13 +35,18 @@ class Calculator_Gui:
        
         #create and pack display frame
         self.memory_box = ttk.Entry(self.display_frame,textvariable=self.memory, width =15)
-        self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
+        #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
         self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
         self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
 
         #keyboard bind upon hitting enter run self.calculate_event
         self.memory_box.bind('<Return>', lambda event: self.calculate())
-        
+        self.memory_box.bind('+', lambda event: self.add())
+        self.memory_box.bind('-', lambda event: self.minus())
+        self.memory_box.bind('*', lambda event: self.multiply())
+        self.memory_box.bind('/', lambda event: self.divide())
+        #self.memory_box.bind('.', lambda event: self.decimal())
+        self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
         self.memory_box.pack()
         self.memory_box2.pack()
@@ -116,6 +119,29 @@ class Calculator_Gui:
         self.number0_frame.pack()
         
         self.memory_box.focus()
+    #validate string
+    def change(self, event=None):
+        print("called")
+        
+        string = str(self.memory.get())
+        print(string)
+        string2 = ""
+        count = 0
+        for letter in string:
+            if letter.isdigit():
+                print('if')
+                string2 = string2 + letter
+            elif letter == ".":
+                if count == 0:
+                    print(count)
+                    string2 = string2 + letter    
+                    count +=1
+                
+            
+        self.memory.set(string2)
+        print(string2)
+
+                  
     #add a number to entry widget based on hitting one of the calculator buttons
     def button_1(self):
         string = self.memory.get() + "1"
@@ -157,17 +183,25 @@ class Calculator_Gui:
         string = self.memory.get() + "0"
         self.memory.set(string)
         self.memory_box.focus()
-    def decimal(self):
+    def decimal(self,event=None):
+        lock = ''
         string = self.memory.get()
+        print(string)
+        
         for letter in string:
             if letter == ".":
                 lock = True
         if lock == True:
             print("too many decimals")   
+            
+
         else:
-            string = self.memory.get() + "."
+            string = string + "."
             self.memory.set(string)
-            self.memory_box.focus()
+
+            
+
+
     
     #operator functions
     def add(self,event=None):
@@ -200,31 +234,19 @@ class Calculator_Gui:
             self.memory_box.focus()        
     def calculate(self):
         if self.operator.get() == '+':
-            result = float(self.memory.get()) + float(self.memory2.get())
-            self.memory.set(str(result))
-            self.memory2.set("")
-            self.operator.set('')  
+            result = float(self.memory.get()) + float(self.memory2.get()) 
         elif self.operator.get() == '-':
             result = float(self.memory2.get()) - float(self.memory.get())
-            self.memory.set(str(result))
-            self.memory2.set("")
-            self.operator.set('')
         elif self.operator.get() == '*':
-            result = float(self.memory2.get()) * float(self.memory.get())
-            self.memory.set(str(result))
-            self.memory2.set("")
-            self.operator.set('')
+            result = float(self.memory2.get()) * float(self.memory.get())  
+            
         elif self.operator.get() == '/':
             result = float(self.memory2.get()) / float(self.memory.get())
-            self.memory.set(str(result))
-            self.memory2.set("")
-            self.operator.set('')    
-    def calculate_event(self,event):
-        if self.operator.get() == '+':
-            result = float(self.memory.get()) + float(self.memory2.get())
-            self.memory.set(str(result))
-            self.memory2.set("")
-            self.operator.set('') 
+        
+        self.clear_entry
+        self.memory.set(result)
+        self.memory2.set('')
+        self.operator.set('')    
     def clear(self):
         self.memory.set('')
         self.memory2.set('')
@@ -233,13 +255,14 @@ class Calculator_Gui:
     def clear_entry(self):
         self.memory.set('')
         self.memory_box.focus()
-    def check_digit(self,p,d):
-        if p.isalpha():
-            return False 
-        elif p == "+" or p== "-" or p== "*" or p== "/":
-            return False 
-        else:
+    """def check_digit(self,p,d):
+        
+        if p.isdigit():
             return True 
+       
+        else:
+            return False"""
+        
     def toggle(self):
         try:
             current = float(self.memory.get())

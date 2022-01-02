@@ -99,7 +99,7 @@ class Calculator_Gui:
         self.button0 = ttk.Button(self.number0_frame,text="0",command=self.button_0)
         self.button_equal =ttk.Button(self.number0_frame,text="=",command=self.calculate)
         self.button_decimal = ttk.Button(self.number0_frame,text='.',command=self.decimal)
-        self.button_divide = ttk.Button(self.number0_frame,text="*",command=self.divide)
+        self.button_divide = ttk.Button(self.number0_frame,text="/",command=self.divide)
 
         #pack the buttons0
         self.button_equal.pack(side='left')
@@ -158,9 +158,16 @@ class Calculator_Gui:
         self.memory.set(string)
         self.memory_box.focus()
     def decimal(self):
-        string = self.memory.get() + "."
-        self.memory.set(string)
-        self.memory_box.focus()
+        string = self.memory.get()
+        for letter in string:
+            if letter == ".":
+                lock = True
+        if lock == True:
+            print("too many decimals")   
+        else:
+            string = self.memory.get() + "."
+            self.memory.set(string)
+            self.memory_box.focus()
     
     #operator functions
     def add(self,event=None):
@@ -230,14 +237,18 @@ class Calculator_Gui:
         if p.isalpha():
             return False 
         elif p == "+" or p== "-" or p== "*" or p== "/":
-            return False  
+            return False 
         else:
             return True 
     def toggle(self):
-        current = float(self.memory.get())
-        toggled = current *-1
-        self.memory.set(str(toggled))
-        self.memory_box.focus()
+        try:
+            current = float(self.memory.get())
+            if current !="":
+                toggled = current *-1
+                self.memory.set(str(toggled))
+                self.memory_box.focus()
+        except ValueError:
+            self.memory_box.focus()
 if __name__ == "__main__":
     main()
 

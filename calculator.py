@@ -198,6 +198,8 @@ class Calculator_Gui:
         else:
             string = string + "."
             self.memory.set(string)
+        self.memory_box.focus()
+        self.memory_box.icursor("end")
 
             
 
@@ -205,33 +207,66 @@ class Calculator_Gui:
     
     #operator functions
     def add(self,event=None):
-        if self.memory.get() != '':
-            first_digit = float(self.memory.get())
+        
+        try:
+            
+            first_digit =float(self.memory.get())
+        except ValueError:
+            print('box is empty')
+            first_digit = ""
+            self.operator.set('+')
+            self.memory_box.focus()
+        else:    
             self.memory2.set(first_digit)
             self.operator.set('+')
             self.memory.set('')
             self.memory_box.focus()
+            
     def minus(self,event=None):
-        if self.memory.get() !="":
+        
+        try:
             first_digit =float(self.memory.get())
+        except ValueError:
+            print('box is empty')
+            first_digit = ""
+            self.operator.set('-')
+            self.memory_box.focus()
+        else:    
             self.memory2.set(first_digit)
             self.operator.set('-')
             self.memory.set('')
             self.memory_box.focus()
+            
     def multiply(self,event=None):
-        if self.memory.get() !="":
+        try:
             first_digit =float(self.memory.get())
+        except ValueError:
+            print('box is empty')
+            first_digit = ""
+            self.operator.set('*')
+            self.memory_box.focus()
+        else:    
             self.memory2.set(first_digit)
             self.operator.set('*')
             self.memory.set('')
             self.memory_box.focus()
+            
     def divide(self,event=None):
-        if self.memory.get() !="":
+        try:
+
             first_digit =float(self.memory.get())
+        except ValueError:
+            print('box is empty')
+            first_digit = ""
+            self.operator.set('/')
+            self.memory_box.focus()
+        else:    
             self.memory2.set(first_digit)
             self.operator.set('/')
             self.memory.set('')
-            self.memory_box.focus()        
+            self.memory_box.focus()
+          
+             
     def calculate(self):
         if self.operator.get() == '+':
             result = float(self.memory.get()) + float(self.memory2.get()) 
@@ -242,11 +277,15 @@ class Calculator_Gui:
             
         elif self.operator.get() == '/':
             result = float(self.memory2.get()) / float(self.memory.get())
+        else:
+            result = self.memory.get()
         
         self.clear_entry
         self.memory.set(result)
         self.memory2.set('')
-        self.operator.set('')    
+        self.operator.set('')   
+        self.memory_box.focus()
+        self.memory_box.icursor("end") 
     def clear(self):
         self.memory.set('')
         self.memory2.set('')

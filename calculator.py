@@ -3,6 +3,7 @@
 #import tkinter and tkk
 import tkinter
 from tkinter import ttk
+from tkinter import font
 #from tkinter.constants import END, FALSE
 
 #main function will create gui window, objects, start mainloop
@@ -16,10 +17,12 @@ def main():
 class Calculator_Gui:
     x = 30
     y = 30
+    bg_color_body = 'pink'
     font_size = 20
     def __init__(self):
         self.main_window = tkinter.Tk()
-        self.main_window.geometry('550x700+600+700')
+        self.main_window.geometry('1800x1100')
+        self.main_window.configure(bg=self.bg_color_body)
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
@@ -28,14 +31,19 @@ class Calculator_Gui:
         
        
     def create_objects(self):
+        s = ttk.Style()
+
+        s.configure('TButton', foreground='black', font=("Calibri",26), background='white')
+        s.configure('TFrame',background=self.bg_color_body, borderwidth=5)
+        s.configure('TLabel',background=self.bg_color_body)
         #create frames
         self.clear_frame = ttk.Frame(self.main_window)
-        self.display_frame = tkinter.Frame(self.main_window)
-        self.number123_frame = tkinter.Frame(self.main_window)
-        self.number456_frame = tkinter.Frame(self.main_window)
-        self.number789_frame = tkinter.Frame(self.main_window)
-        self.number0_frame = tkinter.Frame(self.main_window)
-        self.functional_frame = tkinter.Frame(self.main_window)
+        self.display_frame = ttk.Frame(self.main_window)
+        self.number123_frame = ttk.Frame(self.main_window)
+        self.number456_frame = ttk.Frame(self.main_window)
+        self.number789_frame = ttk.Frame(self.main_window)
+        self.number0_frame = ttk.Frame(self.main_window)
+        self.functional_frame = ttk.Frame(self.main_window)
        
         #create and pack display frame
         self.memory_box = ttk.Entry(self.display_frame,textvariable=self.memory, width =500,font=("Calibri 30"),justify="right")
@@ -57,7 +65,7 @@ class Calculator_Gui:
         self.operator_box.pack()
 
         #create clear button and +/- frame
-        self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear )
+        self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear)
         self.clearentry_button = ttk.Button(self.clear_frame, text="CE", command=self.clear_entry)
         self.toggle = ttk.Button(self.clear_frame,text="+/-",command=self.toggle)
         self.round = ttk.Button(self.clear_frame,text="Round",command=self.round)

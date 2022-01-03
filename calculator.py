@@ -3,7 +3,7 @@
 #import tkinter and tkk
 import tkinter
 from tkinter import ttk
-from tkinter.constants import END, FALSE
+#from tkinter.constants import END, FALSE
 
 #main function will create gui window, objects, start mainloop
 def main():
@@ -14,8 +14,12 @@ def main():
 
 #create gui class
 class Calculator_Gui:
+    x = 30
+    y = 30
+    font_size = 20
     def __init__(self):
         self.main_window = tkinter.Tk()
+        self.main_window.geometry('550x700+600+700')
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
@@ -34,7 +38,7 @@ class Calculator_Gui:
         self.functional_frame = tkinter.Frame(self.main_window)
        
         #create and pack display frame
-        self.memory_box = ttk.Entry(self.display_frame,textvariable=self.memory, width =15)
+        self.memory_box = ttk.Entry(self.display_frame,textvariable=self.memory, width =500,font=("Calibri 30"),justify="right")
         #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
         self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
         self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
@@ -48,43 +52,45 @@ class Calculator_Gui:
         #self.memory_box.bind('.', lambda event: self.decimal())
         self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
-        self.memory_box.pack()
+        self.memory_box.pack(ipady=50)
         self.memory_box2.pack()
         self.operator_box.pack()
 
         #create clear button and +/- frame
-        self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear)
+        self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear )
         self.clearentry_button = ttk.Button(self.clear_frame, text="CE", command=self.clear_entry)
         self.toggle = ttk.Button(self.clear_frame,text="+/-",command=self.toggle)
+        self.round = ttk.Button(self.clear_frame,text="Round",command=self.round)
 
         #pack clear_button
-        self.clear_button.pack(side="left")
-        self.clearentry_button.pack(side="left")
-        self.toggle.pack(side="left")
+        self.clear_button.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.clearentry_button.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.toggle.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.round.pack(side="left",ipadx=self.x, ipady=self.y)
 
         #create the buttons 123
         self.button1 = ttk.Button(self.number123_frame,text="1",command=self.button_1)
-        self.button2 = ttk.Button(self.number123_frame,text="2",command=self.button_2)
-        self.button3 = ttk.Button(self.number123_frame,text="3",command=self.button_3)
-        self.button_plus = ttk.Button(self.number123_frame,text="+",command=self.add)
+        self.button2 = ttk.Button(self.number123_frame,text="2",command=self.button_2 )
+        self.button3 = ttk.Button(self.number123_frame,text="3",command=self.button_3 )
+        self.button_plus = ttk.Button(self.number123_frame,text="+",command=self.add )
         
         #pack the buttons123+
-        self.button1.pack(side="left")
-        self.button2.pack(side="left")
-        self.button3.pack(side="left")
-        self.button_plus.pack(side="left")
+        self.button1.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button2.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button3.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button_plus.pack(side="left",ipadx=self.x,ipady=self.y)
         
         #create the buttons 456
         self.button4 = ttk.Button(self.number456_frame,text="4",command=self.button_4)
-        self.button5 = ttk.Button(self.number456_frame,text="5",command=self.button_5)
-        self.button6 = ttk.Button(self.number456_frame,text="6",command=self.button_6)
+        self.button5 = ttk.Button(self.number456_frame,text="5",command=self.button_5 )
+        self.button6 = ttk.Button(self.number456_frame,text="6",command=self.button_6 )
         self.button_minus = ttk.Button(self.number456_frame,text="-",command=self.minus)
 
         #pack the buttons456
-        self.button4.pack(side="left")
-        self.button5.pack(side="left")
-        self.button6.pack(side="left")
-        self.button_minus.pack(side="left")
+        self.button4.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button5.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button6.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button_minus.pack(side="left",ipadx=self.x,ipady=self.y)
         
         #create the buttons 789
         self.button7 = ttk.Button(self.number789_frame,text="7",command=self.button_7)
@@ -93,22 +99,22 @@ class Calculator_Gui:
         self.button_times = ttk.Button(self.number789_frame,text="*",command=self.multiply)
 
         #pack the buttons789
-        self.button7.pack(side="left")
-        self.button8.pack(side="left")
-        self.button9.pack(side="left")
-        self.button_times.pack(side="left")
+        self.button7.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button8.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button9.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button_times.pack(side="left",ipadx=self.x,ipady=self.y)
         
         #create the buttons 0 equal .
-        self.button0 = ttk.Button(self.number0_frame,text="0",command=self.button_0)
+        self.button0 = ttk.Button(self.number0_frame,text="0",command=self.button_0,)
         self.button_equal =ttk.Button(self.number0_frame,text="=",command=self.calculate)
         self.button_decimal = ttk.Button(self.number0_frame,text='.',command=self.decimal)
         self.button_divide = ttk.Button(self.number0_frame,text="/",command=self.divide)
 
         #pack the buttons0
-        self.button_equal.pack(side='left')
-        self.button0.pack(side="left")
-        self.button_decimal.pack(side="left")
-        self.button_divide.pack(side="left")
+        self.button_equal.pack(side='left',ipadx=self.x,ipady=self.y)
+        self.button0.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button_decimal.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button_divide.pack(side="left",ipadx=self.x,ipady=self.y)
 
         #pack the frames
         self.display_frame.pack()
@@ -119,24 +125,39 @@ class Calculator_Gui:
         self.number0_frame.pack()
         
         self.memory_box.focus()
+    def round(self):
+        string = float(self.memory.get())
+        string = round(string,0)
+        self.memory.set(string)
+        self.memory_box.focus()
+        self.memory_box.icursor('end')
+
+    
     #validate string
+    
     def change(self, event=None):
-        print("called")
+        
         
         string = str(self.memory.get())
-        print(string)
-        string2 = ""
+        
+        length = len(string)
+        
+        if len(string)> 1 and string[0] == "-":
+            string2 = '-'
+        else:    
+            string2 = ""
         count = 0
+        
         for letter in string:
             if letter.isdigit():
-                print('if')
+                
                 string2 = string2 + letter
             elif letter == ".":
                 if count == 0:
                     print(count)
                     string2 = string2 + letter    
                     count +=1
-                
+            
             
         self.memory.set(string2)
         print(string2)

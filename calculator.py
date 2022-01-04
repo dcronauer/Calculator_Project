@@ -16,12 +16,13 @@ def main():
 #create gui class
 class Calculator_Gui:
     x = 30
-    y = 30
+    y = 35
     bg_color_body = 'pink'
     font_size = 20
     def __init__(self):
         self.main_window = tkinter.Tk()
-        self.main_window.geometry('1800x1100')
+        self.main_window.geometry('1200x800')
+        self.main_window.title("Calculator")
         self.main_window.configure(bg=self.bg_color_body)
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
@@ -32,8 +33,9 @@ class Calculator_Gui:
        
     def create_objects(self):
         s = ttk.Style()
+        s.theme_use('alt')
 
-        s.configure('TButton', foreground='black', font=("Calibri",26), background='white')
+        s.configure('TButton', foreground='black', font=("Calibri",26), background="#FFFFFF")
         s.configure('TFrame',background=self.bg_color_body, borderwidth=5)
         s.configure('TLabel',background=self.bg_color_body)
         #create frames

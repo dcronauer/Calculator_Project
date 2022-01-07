@@ -17,7 +17,7 @@ def main():
 class Calculator_Gui:
     x = 30
     y = 35
-    bg_color_body = 'pink'
+    bg_color_body = '#FFA9A3'
     font_size = 20
     def __init__(self):
         self.main_window = tkinter.Tk()
@@ -34,10 +34,15 @@ class Calculator_Gui:
     def create_objects(self):
         s = ttk.Style()
         s.theme_use('alt')
-
-        s.configure('TButton', foreground='black', font=("Calibri",26), background="#FFFFFF")
-        s.configure('TFrame',background=self.bg_color_body, borderwidth=5)
+        #background="#B9E6FF"
+        s.configure('TButton', foreground='black', font=("Calibri",26), background="#B9E6FF")
+        s.configure('TFrame',background=self.bg_color_body)
         s.configure('TLabel',background=self.bg_color_body)
+        s.configure('Equal.TButton', background='#5C95FF')
+        s.map('TButton',
+        background=[('disabled', 'magenta'),
+                    ('pressed', '!focus', 'red'),
+                    ('active', '#FFA9A3')])
         #create frames
         self.clear_frame = ttk.Frame(self.main_window)
         self.display_frame = ttk.Frame(self.main_window)
@@ -59,6 +64,7 @@ class Calculator_Gui:
         self.memory_box.bind('-', lambda event: self.minus())
         self.memory_box.bind('*', lambda event: self.multiply())
         self.memory_box.bind('/', lambda event: self.divide())
+        self.memory_box.bind('<Delete>', lambda event: self.clear())
         #self.memory_box.bind('.', lambda event: self.decimal())
         self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
@@ -116,7 +122,7 @@ class Calculator_Gui:
         
         #create the buttons 0 equal .
         self.button0 = ttk.Button(self.number0_frame,text="0",command=self.button_0,)
-        self.button_equal =ttk.Button(self.number0_frame,text="=",command=self.calculate)
+        self.button_equal =ttk.Button(self.number0_frame,text="=",command=self.calculate,style='Equal.TButton')
         self.button_decimal = ttk.Button(self.number0_frame,text='.',command=self.decimal)
         self.button_divide = ttk.Button(self.number0_frame,text="/",command=self.divide)
 
@@ -164,56 +170,62 @@ class Calculator_Gui:
                 string2 = string2 + letter
             elif letter == ".":
                 if count == 0:
-                    print(count)
                     string2 = string2 + letter    
                     count +=1
             
             
-        self.memory.set(string2)
-        print(string2)
-
-                  
+        self.memory.set(string2)             
     #add a number to entry widget based on hitting one of the calculator buttons
     def button_1(self):
         string = self.memory.get() + "1"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_2(self):
         string = self.memory.get() + "2"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_3(self):
         string = self.memory.get() + "3"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_4(self):
         string = self.memory.get() + "4"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_5(self):
         string = self.memory.get() + "5"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_6(self):
         string = self.memory.get() + "6"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_7(self):
         string = self.memory.get() + "7"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_8(self):
         string = self.memory.get() + "8"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_9(self):
         string = self.memory.get() + "9"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def button_0(self):
         string = self.memory.get() + "0"
         self.memory.set(string)
         self.memory_box.focus()
+        self.memory_box.icursor("end")
     def decimal(self,event=None):
         lock = ''
         string = self.memory.get()
@@ -317,7 +329,7 @@ class Calculator_Gui:
         self.operator.set('')   
         self.memory_box.focus()
         self.memory_box.icursor("end") 
-    def clear(self):
+    def clear(self,event=None):
         self.memory.set('')
         self.memory2.set('')
         self.operator.set('')
@@ -340,8 +352,10 @@ class Calculator_Gui:
                 toggled = current *-1
                 self.memory.set(str(toggled))
                 self.memory_box.focus()
+                self.memory_box.icursor("end")
         except ValueError:
             self.memory_box.focus()
+            self.memory_box.icursor("end")
 if __name__ == "__main__":
     main()
 

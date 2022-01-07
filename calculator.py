@@ -41,7 +41,7 @@ class Calculator_Gui:
         s.configure('Equal.TButton', background='#5C95FF')
         s.map('TButton',
         background=[('disabled', 'magenta'),
-                    ('pressed', '!focus', 'red'),
+                    ('pressed',  '#F87575'),
                     ('active', '#FFA9A3')])
         #create frames
         self.clear_frame = ttk.Frame(self.main_window)
@@ -65,6 +65,7 @@ class Calculator_Gui:
         self.memory_box.bind('*', lambda event: self.multiply())
         self.memory_box.bind('/', lambda event: self.divide())
         self.memory_box.bind('<Delete>', lambda event: self.clear())
+        self.memory_box.bind(',', lambda event: self.comma())
         #self.memory_box.bind('.', lambda event: self.decimal())
         self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
@@ -141,6 +142,22 @@ class Calculator_Gui:
         self.number0_frame.pack()
         
         self.memory_box.focus()
+    
+
+    def comma(self,event=None):
+        string = self.memory_box.get()
+        try:
+            string = string.format(string,",d")
+            print(string)
+            
+            self.memory.set(f'{string:,}')
+        except Exception as error:
+            print(error)
+       
+            
+
+    
+    
     def round(self):
         string = float(self.memory.get())
         string = round(string,0)
@@ -168,13 +185,21 @@ class Calculator_Gui:
             if letter.isdigit():
                 
                 string2 = string2 + letter
+               
+                
+                
             elif letter == ".":
                 if count == 0:
                     string2 = string2 + letter    
                     count +=1
-            
-            
-        self.memory.set(string2)             
+                    
+       
+        self.memory.set(string2)
+        self.memory_box.focus()
+        self.memory_box.icursor("end")   
+
+                
+                       
     #add a number to entry widget based on hitting one of the calculator buttons
     def button_1(self):
         string = self.memory.get() + "1"
@@ -260,10 +285,15 @@ class Calculator_Gui:
             self.operator.set('+')
             self.memory_box.focus()
         else:    
-            self.memory2.set(first_digit)
-            self.operator.set('+')
-            self.memory.set('')
-            self.memory_box.focus()
+            if first_digit != '' and self.memory2.get() != '':
+                self.operator.set('+')
+                self.memory_box.focus()
+                self.memory_box.icursor("end")
+            else:
+                self.memory2.set(first_digit)
+                self.operator.set('+')
+                self.memory.set('')
+                self.memory_box.focus()
             
     def minus(self,event=None):
         
@@ -275,10 +305,15 @@ class Calculator_Gui:
             self.operator.set('-')
             self.memory_box.focus()
         else:    
-            self.memory2.set(first_digit)
-            self.operator.set('-')
-            self.memory.set('')
-            self.memory_box.focus()
+            if first_digit != '' and self.memory2.get() != '':
+                self.operator.set('-')
+                self.memory_box.focus()
+                self.memory_box.icursor("end")
+            else:
+                self.memory2.set(first_digit)
+                self.operator.set('-')
+                self.memory.set('')
+                self.memory_box.focus()
             
     def multiply(self,event=None):
         try:
@@ -289,11 +324,16 @@ class Calculator_Gui:
             self.operator.set('*')
             self.memory_box.focus()
         else:    
-            self.memory2.set(first_digit)
-            self.operator.set('*')
-            self.memory.set('')
-            self.memory_box.focus()
-            
+            if first_digit != '' and self.memory2.get() != '':
+                self.operator.set('*')
+                self.memory_box.focus()
+                self.memory_box.icursor("end")
+            else:
+                self.memory2.set(first_digit)
+                self.operator.set('*')
+                self.memory.set('')
+                self.memory_box.focus()
+        
     def divide(self,event=None):
         try:
 
@@ -304,10 +344,15 @@ class Calculator_Gui:
             self.operator.set('/')
             self.memory_box.focus()
         else:    
-            self.memory2.set(first_digit)
-            self.operator.set('/')
-            self.memory.set('')
-            self.memory_box.focus()
+            if first_digit != '' and self.memory2.get() != '':
+                self.operator.set('/')
+                self.memory_box.focus()
+                self.memory_box.icursor("end")
+            else:
+                self.memory2.set(first_digit)
+                self.operator.set('/')
+                self.memory.set('')
+                self.memory_box.focus()
           
              
     def calculate(self):

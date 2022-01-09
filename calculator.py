@@ -18,8 +18,8 @@ def get_display_size():
         root.update_idletasks()
         root.attributes('-fullscreen', True)
         root.state('iconic')
-        height = root.winfo_screenheight()
-        width = root.winfo_screenwidth()
+        height = int(root.winfo_screenheight())
+        width = int(root.winfo_screenwidth())
         root.destroy()
         return height, width
 #create gui class
@@ -33,19 +33,34 @@ class Calculator_Gui:
     
     
     def __init__(self,height,width):
-        height_w = height/2
-        width_w = width/2
+        print(height,width)
+        height1, width1, x, y = self.get_dimensions(height,width)
+        print(height1,width1)
         self.main_window = tkinter.Tk()
-        geometry = "%dx%d" % (width_w,height_w)
+
+        geometry = "%dx%d+%d+%d" % (width1,height1,x,y)
         self.main_window.geometry(geometry)
         self.main_window.title("Calculator")
         self.main_window.configure(bg=self.bg_color_body)
+        self.main_window.minsize(width1,height1)
+        
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
         #self.reg = self.main_window.register(self.check_digit)
         self.create_objects()
-        
+    def get_dimensions(self,height,width):
+        #1080 815px height by 1084 width, 2K  823 height 1113px width
+        if height >850 and width>1080:
+            h_factor = height/815
+            w_factor = width/1080
+            height1 = int(height/h_factor)
+            width1 = int(width/w_factor)
+            x = 100
+            y = 5
+            return height1, width1, x, y
+        else:
+            return 750, 1000,100,5    
        
     def create_objects(self):
         s = ttk.Style()

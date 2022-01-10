@@ -5,12 +5,12 @@ import tkinter
 from tkinter import ttk
 from tkinter import font
 #from tkinter.constants import END, FALSE
-
+ORIGINAL_DPI = 96
 #main function will create gui window, objects, start mainloop
 def main():
     #run instance
-    height, width = get_display_size()
-    instance = Calculator_Gui(height,width)
+    height, width, current_dpi = get_display_size()
+    instance = Calculator_Gui(height,width,current_dpi)
     #setup main loop   
     tkinter.mainloop()
 def get_display_size():
@@ -20,8 +20,10 @@ def get_display_size():
         root.state('iconic')
         height = int(root.winfo_screenheight())
         width = int(root.winfo_screenwidth())
+        current_dpi = root.winfo_fpixels('1i')
+        print(current_dpi)
         root.destroy()
-        return height, width
+        return height, width, current_dpi
 #create gui class
 class Calculator_Gui:
     x = 30
@@ -32,8 +34,8 @@ class Calculator_Gui:
     
     
     
-    def __init__(self,height,width):
-        print(height,width)
+    def __init__(self,height,width,current_dpi):
+        print(height,width,current_dpi)
         height1, width1, x, y = self.get_dimensions(height,width)
         print(height1,width1)
         self.main_window = tkinter.Tk()
@@ -53,7 +55,7 @@ class Calculator_Gui:
         #1080 815px height by 1084 width, 2K  823 height 1113px width
         if height >850 and width>1080:
             h_factor = height/815
-            w_factor = width/1080
+            w_factor = width/1250
             height1 = int(height/h_factor)
             width1 = int(width/w_factor)
             x = 100

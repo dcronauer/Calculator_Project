@@ -4,6 +4,7 @@
 import tkinter
 from tkinter import ttk
 from tkinter import font
+from tkinter.constants import LEFT, RIGHT
 #from tkinter.constants import END, FALSE
 ORIGINAL_DPI = 96
 #main function will create gui window, objects, start mainloop
@@ -76,6 +77,8 @@ class Calculator_Gui:
         background=[('disabled', 'magenta'),
                     ('pressed',  '#F87575'),
                     ('active', '#FFA9A3')])
+        s.configure('TLabel', foreground='black', font =('Calibri,26'), background="#FFF111",justify=LEFT,width=15)
+        s.configure('memory.TLabel', foreground='black', font =('Calibri,26'), background="#FFF", justify=RIGHT,width=300)
         #create frames
         self.clear_frame = ttk.Frame(self.main_window)
         self.display_frame = ttk.Frame(self.main_window)
@@ -86,7 +89,7 @@ class Calculator_Gui:
         self.functional_frame = ttk.Frame(self.main_window)
        
         #create and pack display frame
-        self.memory_box = ttk.Label(self.display_frame,textvariable=self.memory, width =300,font=("Calibri 30"),justify="right")
+        self.memory_box = ttk.Label(self.display_frame,textvariable=self.memory,style="memory.TLabel")
         #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
         self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
         self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
@@ -115,10 +118,10 @@ class Calculator_Gui:
         self.main_window.bind('.', lambda event: self.decimal())
         #self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
-        self.memory_box.pack(ipady=50)
-        self.memory_box2.pack()
-        self.operator_box.pack()
-
+        self.operator_box.pack(side="left",ipady=50)
+        self.memory_box2.pack(side="left",ipady=50)
+        self.memory_box.pack(side="left",ipady=50)
+        
         #create clear button and +/- frame
         self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear)
         self.clearentry_button = ttk.Button(self.clear_frame, text="CE", command=self.clear_entry)

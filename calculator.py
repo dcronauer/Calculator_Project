@@ -28,7 +28,9 @@ def get_display_size():
 #create gui class
 class Calculator_Gui:
     x = 0
-    y = 10
+    y = 0   
+    h = 10
+    w =5
     bg_color_body = '#FFA9A3'
     font_size = 16
     
@@ -55,8 +57,8 @@ class Calculator_Gui:
     def get_dimensions(self,height,width):
         #1080 815px height by 1084 width, 2K  823 height 1113px width
         if height >490 and width>790:
-            h_factor = height/575
-            w_factor = width/850
+            h_factor = height/400
+            w_factor = width/500
             height1 = int(height/h_factor)
             width1 = int(width/w_factor)
             x = 100
@@ -69,7 +71,7 @@ class Calculator_Gui:
         s = ttk.Style()
         s.theme_use('alt')
         #background="#B9E6FF"
-        s.configure('TButton', foreground='black', font=("Calibri",26), background="#B9E6FF")
+        s.configure('TButton', foreground='black', font=("Calibri",26), background="#B9E6FF",height=self.h, width=self.w)
         s.configure('TFrame',background=self.bg_color_body)
         s.configure('TLabel',background=self.bg_color_body)
         s.configure('Equal.TButton', background='#5C95FF')
@@ -77,8 +79,8 @@ class Calculator_Gui:
         background=[('disabled', 'magenta'),
                     ('pressed',  '#F87575'),
                     ('active', '#FFA9A3')])
-        s.configure('TLabel', foreground='black', font =('Calibri,26'), background="#FFF111",justify=LEFT,width=15)
-        s.configure('memory.TLabel', foreground='black', font =('Calibri,26'), background="#FFF", justify=RIGHT,width=300)
+        s.configure('TLabel', foreground='grey', font =('Calibri,26'), background="#FFF",anchor="e",width=15)
+        s.configure('memory.TLabel', foreground='black', font =('Calibri,26'), background="#FFF", width=300)
         #create frames
         self.clear_frame = ttk.Frame(self.main_window)
         self.display_frame = ttk.Frame(self.main_window)

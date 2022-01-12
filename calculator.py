@@ -26,10 +26,10 @@ def get_display_size():
         return height, width, current_dpi
 #create gui class
 class Calculator_Gui:
-    x = 30
-    y = 35
+    x = 0
+    y = 10
     bg_color_body = '#FFA9A3'
-    font_size = 20
+    font_size = 16
     
     
     
@@ -50,12 +50,12 @@ class Calculator_Gui:
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
         #self.reg = self.main_window.register(self.check_digit)
-        self.create_objects()
+        self.create_objects(height1,width1)
     def get_dimensions(self,height,width):
         #1080 815px height by 1084 width, 2K  823 height 1113px width
-        if height >850 and width>1080:
-            h_factor = height/815
-            w_factor = width/1250
+        if height >490 and width>790:
+            h_factor = height/575
+            w_factor = width/850
             height1 = int(height/h_factor)
             width1 = int(width/w_factor)
             x = 100
@@ -64,7 +64,7 @@ class Calculator_Gui:
         else:
             return 750, 1000,100,5    
        
-    def create_objects(self):
+    def create_objects(self,height1,width1):
         s = ttk.Style()
         s.theme_use('alt')
         #background="#B9E6FF"
@@ -86,24 +86,34 @@ class Calculator_Gui:
         self.functional_frame = ttk.Frame(self.main_window)
        
         #create and pack display frame
-        self.memory_box = ttk.Entry(self.display_frame,textvariable=self.memory, width =500,font=("Calibri 30"),justify="right")
+        self.memory_box = ttk.Label(self.display_frame,textvariable=self.memory, width =300,font=("Calibri 30"),justify="right")
         #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
         self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
         self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
 
         #keyboard bind upon hitting enter run self.calculate_event
-        self.memory_box.bind('<Return>', lambda event: self.calculate())
-        self.memory_box.bind('+', lambda event: self.add())
-        self.memory_box.bind('-', lambda event: self.minus())
-        self.memory_box.bind('*', lambda event: self.multiply())
-        self.memory_box.bind('/', lambda event: self.divide())
-        self.memory_box.bind('<Delete>', lambda event: self.clear())
-        self.memory_box.bind('<End>',lambda event: self.clear_entry())
-        self.memory_box.bind('<Insert>',lambda event: self.toggle())
-        self.memory_box.bind('<Home>',lambda event: self.round())
-        self.memory_box.bind(',', lambda event: self.comma())
-        #self.memory_box.bind('.', lambda event: self.decimal())
-        self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
+        self.main_window.bind('<Return>', lambda event: self.calculate())
+        self.main_window.bind('+', lambda event: self.add())
+        self.main_window.bind('-', lambda event: self.minus())
+        self.main_window.bind('*', lambda event: self.multiply())
+        self.main_window.bind('/', lambda event: self.divide())
+        self.main_window.bind('<Delete>', lambda event: self.clear())
+        self.main_window.bind('<End>',lambda event: self.clear_entry())
+        self.main_window.bind('<Insert>',lambda event: self.toggle())
+        self.main_window.bind('<Home>',lambda event: self.round())
+        self.main_window.bind(',', lambda event: self.comma())
+        self.main_window.bind('1',lambda event: self.button_1())
+        self.main_window.bind('2',lambda event: self.button_2())
+        self.main_window.bind('3',lambda event: self.button_3())
+        self.main_window.bind('4',lambda event: self.button_4())
+        self.main_window.bind('5',lambda event: self.button_5())
+        self.main_window.bind('6',lambda event: self.button_6())
+        self.main_window.bind('7',lambda event: self.button_7())
+        self.main_window.bind('8',lambda event: self.button_8())
+        self.main_window.bind('9',lambda event: self.button_9())
+        self.main_window.bind('0',lambda event: self.button_0())
+        self.main_window.bind('.', lambda event: self.decimal())
+        #self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
         self.memory_box.pack(ipady=50)
         self.memory_box2.pack()
@@ -181,7 +191,7 @@ class Calculator_Gui:
     
 
     def comma(self,event=None):
-        string = self.memory_box.get()
+        string = self.memory.get()
         try:
             string = string.format(string,",d")
             print(string)
@@ -194,93 +204,93 @@ class Calculator_Gui:
         string = float(self.memory.get())
         string = round(string,0)
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor('end')
+        # self.memory_box.focus()
+        # self.memory_box.icursor('end')
 
     #validate string
     
-    def change(self, event=None):
+    # def change(self, event=None):
         
         
-        string = str(self.memory.get())
+    #     string = str(self.memory.get())
         
-        length = len(string)
+    #     length = len(string)
         
-        if len(string)> 1 and string[0] == "-":
-            string2 = '-'
-        else:    
-            string2 = ""
-        count = 0
+    #     if len(string)> 1 and string[0] == "-":
+    #         string2 = '-'
+    #     else:    
+    #         string2 = ""
+    #     count = 0
         
-        for letter in string:
-            if letter.isdigit():
+    #     for letter in string:
+    #         if letter.isdigit():
                 
-                string2 = string2 + letter
+    #             string2 = string2 + letter
                
                 
                 
-            elif letter == ".":
-                if count == 0:
-                    string2 = string2 + letter    
-                    count +=1
+    #         elif letter == ".":
+    #             if count == 0:
+    #                 string2 = string2 + letter    
+    #                 count +=1
                     
        
-        self.memory.set(string2)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")   
+    #     self.memory.set(string2)
+    #     self.memory_box.focus()
+    #     self.memory_box.icursor("end")   
 
                            
     #add a number to entry widget based on hitting one of the calculator buttons
-    def button_1(self):
+    def button_1(self, event=None):
         string = self.memory.get() + "1"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_2(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_2(self, event=None):
         string = self.memory.get() + "2"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_3(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_3(self, event=None):
         string = self.memory.get() + "3"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_4(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_4(self, event=None):
         string = self.memory.get() + "4"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_5(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_5(self, event=None):
         string = self.memory.get() + "5"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_6(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_6(self, event=None):
         string = self.memory.get() + "6"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_7(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_7(self, event=None):
         string = self.memory.get() + "7"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_8(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_8(self, event=None):
         string = self.memory.get() + "8"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_9(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_9(self, event=None):
         string = self.memory.get() + "9"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
-    def button_0(self):
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
+    def button_0(self, event=None):
         string = self.memory.get() + "0"
         self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
     def decimal(self,event=None):
         lock = ''
         string = self.memory.get()
@@ -295,8 +305,8 @@ class Calculator_Gui:
         else:
             string = string + "."
             self.memory.set(string)
-        self.memory_box.focus()
-        self.memory_box.icursor("end")
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end")
 
     #operator functions
     def add(self,event=None):
@@ -308,17 +318,17 @@ class Calculator_Gui:
             print('box is empty')
             first_digit = ""
             self.operator.set('+')
-            self.memory_box.focus()
+            # self.memory_box.focus()
         else:    
             if first_digit != '' and self.memory2.get() != '':
                 self.operator.set('+')
-                self.memory_box.focus()
-                self.memory_box.icursor("end")
+                # self.memory_box.focus()
+                # self.memory_box.icursor("end")
             else:
                 self.memory2.set(first_digit)
                 self.operator.set('+')
                 self.memory.set('')
-                self.memory_box.focus()
+                # self.memory_box.focus()
             
     def minus(self,event=None):
         
@@ -328,17 +338,17 @@ class Calculator_Gui:
             print('box is empty')
             first_digit = ""
             self.operator.set('-')
-            self.memory_box.focus()
+            # self.memory_box.focus()
         else:    
             if first_digit != '' and self.memory2.get() != '':
                 self.operator.set('-')
-                self.memory_box.focus()
-                self.memory_box.icursor("end")
+                # self.memory_box.focus()
+                # self.memory_box.icursor("end")
             else:
                 self.memory2.set(first_digit)
                 self.operator.set('-')
                 self.memory.set('')
-                self.memory_box.focus()
+                # self.memory_box.focus()
             
     def multiply(self,event=None):
         try:
@@ -347,17 +357,17 @@ class Calculator_Gui:
             print('box is empty')
             first_digit = ""
             self.operator.set('*')
-            self.memory_box.focus()
+            # self.memory_box.focus()
         else:    
             if first_digit != '' and self.memory2.get() != '':
                 self.operator.set('*')
-                self.memory_box.focus()
-                self.memory_box.icursor("end")
+                # self.memory_box.focus()
+                # self.memory_box.icursor("end")
             else:
                 self.memory2.set(first_digit)
                 self.operator.set('*')
                 self.memory.set('')
-                self.memory_box.focus()
+                # self.memory_box.focus()
         
     def divide(self,event=None):
         try:
@@ -367,17 +377,17 @@ class Calculator_Gui:
             print('box is empty')
             first_digit = ""
             self.operator.set('/')
-            self.memory_box.focus()
+            # self.memory_box.focus()
         else:    
             if first_digit != '' and self.memory2.get() != '':
                 self.operator.set('/')
-                self.memory_box.focus()
-                self.memory_box.icursor("end")
+                # self.memory_box.focus()
+                # self.memory_box.icursor("end")
             else:
                 self.memory2.set(first_digit)
                 self.operator.set('/')
                 self.memory.set('')
-                self.memory_box.focus()
+                # self.memory_box.focus()
           
              
     def calculate(self):
@@ -397,16 +407,16 @@ class Calculator_Gui:
         self.memory.set(result)
         self.memory2.set('')
         self.operator.set('')   
-        self.memory_box.focus()
-        self.memory_box.icursor("end") 
+        # self.memory_box.focus()
+        # self.memory_box.icursor("end") 
     def clear(self,event=None):
         self.memory.set('')
         self.memory2.set('')
         self.operator.set('')
-        self.memory_box.focus()
+        # self.memory_box.focus()
     def clear_entry(self,event=None):
         self.memory.set('')
-        self.memory_box.focus()
+        # self.memory_box.focus()
     """def check_digit(self,p,d):
         
         if p.isdigit():
@@ -421,11 +431,12 @@ class Calculator_Gui:
             if current !="":
                 toggled = current *-1
                 self.memory.set(str(toggled))
-                self.memory_box.focus()
-                self.memory_box.icursor("end")
-        except ValueError or TypeError:
-            self.memory_box.focus()
-            self.memory_box.icursor("end")
+                # self.memory_box.focus()
+                # self.memory_box.icursor("end")
+        except ValueError or TypeError as Exception:
+            print(Exception)
+            #self.memory_box.focus()
+            #self.memory_box.icursor("end")
 if __name__ == "__main__":
     main()
 

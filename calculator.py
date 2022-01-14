@@ -27,10 +27,10 @@ def get_display_size():
         return height, width, current_dpi
 #create gui class
 class Calculator_Gui:
-    x = 0
-    y = 0   
-    h = 10
-    w =5
+    x = 2
+    y = 7   
+    h = 25
+    w =6
     bg_color_body = '#FFA9A3'
     font_size = 16
     
@@ -57,8 +57,8 @@ class Calculator_Gui:
     def get_dimensions(self,height,width):
         #1080 815px height by 1084 width, 2K  823 height 1113px width
         if height >490 and width>790:
-            h_factor = height/400
-            w_factor = width/500
+            h_factor = height/330
+            w_factor = width/328
             height1 = int(height/h_factor)
             width1 = int(width/w_factor)
             x = 100
@@ -71,7 +71,7 @@ class Calculator_Gui:
         s = ttk.Style()
         s.theme_use('alt')
         #background="#B9E6FF"
-        s.configure('TButton', foreground='black', font=("Calibri",26), background="#B9E6FF",height=self.h, width=self.w)
+        s.configure('TButton', foreground='black', font=("Calibri",self.font_size), background="#B9E6FF",height=self.h, width=self.w)
         s.configure('TFrame',background=self.bg_color_body)
         s.configure('TLabel',background=self.bg_color_body)
         s.configure('Equal.TButton', background='#5C95FF')
@@ -120,9 +120,9 @@ class Calculator_Gui:
         self.main_window.bind('.', lambda event: self.decimal())
         #self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
         #pack display frame
-        self.operator_box.pack(side="left",ipady=50)
-        self.memory_box2.pack(side="left",ipady=50)
-        self.memory_box.pack(side="left",ipady=50)
+        self.operator_box.pack(side="left",ipady=25)
+        self.memory_box2.pack(side="left",ipady=25)
+        self.memory_box.pack(side="left",ipady=25)
         
         #create clear button and +/- frame
         self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear)
@@ -187,26 +187,38 @@ class Calculator_Gui:
         #pack the frames
         self.display_frame.pack()
         self.clear_frame.pack()
-        self.number123_frame.pack()
-        self.number456_frame.pack()
         self.number789_frame.pack()
+        self.number456_frame.pack()
+        self.number123_frame.pack()
         self.number0_frame.pack()
         
         self.memory_box.focus()
     
-
+    
     def comma(self,event=None):
+        comma_toggle = ''
         string = self.memory.get()
-        try:
-            string = string.format(string,",d")
-            print(string)
-            
-            self.memory.set(f'{string:,}')
-        except Exception as error:
-            print(error)
+        for letter in string:
+            if letter == ",":
+                comma_toggle = True
+        if comma_toggle == True:
+            string_replace = string.replace(',','')
+            string = float(string_replace)
+            self.memory.set(string)
+        else:
+            try:
+                string = float(string)
+                string = "{:,}".format(string)
+                print(string)
+                
+                self.memory.set(str(string))
+            except Exception as error:
+                print(error)
        
     def round(self):
-        string = float(self.memory.get())
+        string = self.memory.get()
+        string_replace = string.replace(',','')
+        string =float(string_replace)
         string = round(string,0)
         self.memory.set(string)
         # self.memory_box.focus()
@@ -317,8 +329,9 @@ class Calculator_Gui:
     def add(self,event=None):
         
         try:
-            
-            first_digit =float(self.memory.get())
+            string = self.memory.get()
+            string_replace = string.replace(',','')
+            first_digit =float(string_replace)
         except ValueError:
             print('box is empty')
             first_digit = ""
@@ -338,10 +351,12 @@ class Calculator_Gui:
     def minus(self,event=None):
         
         try:
-            first_digit =float(self.memory.get())
-        except ValueError:
-            print('box is empty')
-            first_digit = ""
+            string = self.memory.get()
+            string_replace = string.replace(',','')
+            first_digit =float(string_replace)
+        except ValueError as Exception:
+            print(Exception)
+            first_digit = ''
             self.operator.set('-')
             # self.memory_box.focus()
         else:    
@@ -357,7 +372,9 @@ class Calculator_Gui:
             
     def multiply(self,event=None):
         try:
-            first_digit =float(self.memory.get())
+            string = self.memory.get()
+            string_replace = string.replace(',','')
+            first_digit =float(string_replace)
         except ValueError:
             print('box is empty')
             first_digit = ""
@@ -376,8 +393,9 @@ class Calculator_Gui:
         
     def divide(self,event=None):
         try:
-
-            first_digit =float(self.memory.get())
+            string = self.memory.get()
+            string_replace = string.replace(',','')
+            first_digit =float(string_replace)
         except ValueError:
             print('box is empty')
             first_digit = ""
@@ -432,7 +450,9 @@ class Calculator_Gui:
         
     def toggle(self,event=None):
         try:
-            current = float(self.memory.get())
+            string = self.memory.get()
+            string_replace = string.replace(',','')
+            current =float(string_replace)
             if current !="":
                 toggled = current *-1
                 self.memory.set(str(toggled))
@@ -447,7 +467,7 @@ if __name__ == "__main__":
 
             
 
-
+  
 
         
         

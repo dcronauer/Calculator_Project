@@ -1,6 +1,7 @@
 #this program aims to recreate a simple calculator app
 
 #import tkinter and tkk
+from cgitb import text
 import tkinter
 from tkinter import ttk
 from tkinter import font
@@ -85,21 +86,12 @@ class Calculator_Gui:
                     ('pressed',  '#F87575'),
                     ('active', '#FFA9A3')])
         s.configure('TLabel', foreground='grey', font =('Calibri,26'), background="#FFF",anchor="e",width=15)
-        s.configure('memory.TLabel', foreground='black', font =('Calibri,26'), background="#FFF", width=300)
+        s.configure('memory.TLabel', foreground='black', font =('Calibri,26'), background="#FFF", width=15)
         #create frames
-        self.clear_frame = ttk.Frame(self.main_window)
-        self.display_frame = ttk.Frame(self.main_window)
-        self.number123_frame = ttk.Frame(self.main_window)
-        self.number456_frame = ttk.Frame(self.main_window)
-        self.number789_frame = ttk.Frame(self.main_window)
-        self.number0_frame = ttk.Frame(self.main_window)
-        self.functional_frame = ttk.Frame(self.main_window)
+        self.frame = tkinter.Frame(self.main_window)
+        self.total_frame = tkinter.Frame(self.main_window)
        
-        #create and pack display frame
-        self.memory_box = ttk.Label(self.display_frame,textvariable=self.memory,style="memory.TLabel")
-        #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
-        self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
-        self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
+        
 
         #keyboard bind upon hitting enter run self.event
         self.main_window.bind('<Return>', lambda event: self.calculate())
@@ -127,78 +119,46 @@ class Calculator_Gui:
         # couldnt get commas to work so i went a different direction to have a label display the memory variable and use binds to call the button funcitions
         #rather than have both the button and keyboard strokes work on the event widget and using the self.change function which would handle adding to string
         #if it was a digit, or decimal
-        #pack display frame
-        self.operator_box.pack(side="left",ipady=25)
-        self.memory_box2.pack(side="left",ipady=25)
-        self.memory_box.pack(side="left",ipady=25)
         
+        #create and pack display frame
+        self.memory_box = ttk.Label(self.total_frame,textvariable=self.memory,style="memory.TLabel").grid(row=0,column=2)
+        #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
+        self.memory_box2 = ttk.Label(self.total_frame,textvariable=self.memory2, width=15).grid(row=0,column=1)
+        self.operator_box = ttk.Label(self.total_frame,textvariable=self.operator, width=1).grid(row=0,column=0)
         #create clear button and +/- frame
-        self.clear_button = ttk.Button(self.clear_frame,text="C",command=self.clear)
-        self.clearentry_button = ttk.Button(self.clear_frame, text="CE", command=self.clear_entry)
-        self.toggle_button = ttk.Button(self.clear_frame,text="+/-",command=self.toggle)
-        self.round_button = ttk.Button(self.clear_frame,text="Round",command=self.round)
-
-        #pack clear_button
-        self.clear_button.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.clearentry_button.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.toggle_button.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.round_button.pack(side="left",ipadx=self.x, ipady=self.y)
+        self.clear_button = ttk.Button(self.frame,text="C",command=self.clear).grid(row=1,column=0)
+        self.clearentry_button = ttk.Button(self.frame, text="CE", command=self.clear_entry).grid(row=1,column=1)
+        self.toggle_button = ttk.Button(self.frame,text="+/-",command=self.toggle).grid(row=1,column=2)
+        self.round_button = ttk.Button(self.frame,text="Round",command=self.round).grid(row=1,column=3)
 
         #create the buttons 123
-        self.button1 = ttk.Button(self.number123_frame,text="1",command=self.button_1)
-        self.button2 = ttk.Button(self.number123_frame,text="2",command=self.button_2 )
-        self.button3 = ttk.Button(self.number123_frame,text="3",command=self.button_3 )
-        self.button_plus = ttk.Button(self.number123_frame,text="+",command=self.add )
-        
-        #pack the buttons123+
-        self.button1.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button2.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button3.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button_plus.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button1 = ttk.Button(self.frame,text="1",command=self.button_1).grid(row=4,column=0)
+        self.button2 = ttk.Button(self.frame,text="2",command=self.button_2 ).grid(row=4,column=1)
+        self.button3 = ttk.Button(self.frame,text="3",command=self.button_3 ).grid(row=4,column=2)
+        self.button_plus = ttk.Button(self.frame,text="+",command=self.add ).grid(row=4,column=3)
         
         #create the buttons 456
-        self.button4 = ttk.Button(self.number456_frame,text="4",command=self.button_4)
-        self.button5 = ttk.Button(self.number456_frame,text="5",command=self.button_5 )
-        self.button6 = ttk.Button(self.number456_frame,text="6",command=self.button_6 )
-        self.button_minus = ttk.Button(self.number456_frame,text="-",command=self.minus)
-
-        #pack the buttons456
-        self.button4.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button5.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button6.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button_minus.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button4 = ttk.Button(self.frame,text="4",command=self.button_4).grid(row=3,column=0)
+        self.button5 = ttk.Button(self.frame,text="5",command=self.button_5 ).grid(row=3,column=1)
+        self.button6 = ttk.Button(self.frame,text="6",command=self.button_6 ).grid(row=3,column=2)
+        self.button_minus = ttk.Button(self.frame,text="-",command=self.minus).grid(row=3,column=3)
         
         #create the buttons 789
-        self.button7 = ttk.Button(self.number789_frame,text="7",command=self.button_7)
-        self.button8 = ttk.Button(self.number789_frame,text="8",command=self.button_8)
-        self.button9 = ttk.Button(self.number789_frame,text="9",command=self.button_9)
-        self.button_times = ttk.Button(self.number789_frame,text="*",command=self.multiply)
+        self.button7 = ttk.Button(self.frame,text="7",command=self.button_7).grid(row=2,column=0)
+        self.button8 = ttk.Button(self.frame,text="8",command=self.button_8).grid(row=2,column=1)
+        self.button9 = ttk.Button(self.frame,text="9",command=self.button_9).grid(row=2,column=2)
+        self.button_times = ttk.Button(self.frame,text="*",command=self.multiply).grid(row=2,column=3)
 
-        #pack the buttons789
-        self.button7.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button8.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button9.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button_times.pack(side="left",ipadx=self.x,ipady=self.y)
-        
         #create the buttons 0 equal .
-        self.button0 = ttk.Button(self.number0_frame,text="0",command=self.button_0,)
-        self.button_equal =ttk.Button(self.number0_frame,text="=",command=self.calculate,style='Equal.TButton')
-        self.button_decimal = ttk.Button(self.number0_frame,text='.',command=self.decimal)
-        self.button_divide = ttk.Button(self.number0_frame,text="/",command=self.divide)
-
-        #pack the buttons0
-        self.button_equal.pack(side='left',ipadx=self.x,ipady=self.y)
-        self.button0.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button_decimal.pack(side="left",ipadx=self.x,ipady=self.y)
-        self.button_divide.pack(side="left",ipadx=self.x,ipady=self.y)
+        self.button0 = ttk.Button(self.frame,text="0",command=self.button_0,).grid(row=5,column=1)
+        self.button_equal =ttk.Button(self.frame,text="=",command=self.calculate,style='Equal.TButton').grid(row=5,column=0)
+        self.button_decimal = ttk.Button(self.frame,text='.',command=self.decimal).grid(row=5,column=2)
+        self.button_divide = ttk.Button(self.frame,text="/",command=self.divide).grid(row=5,column=3)
 
         #pack the frames
-        self.display_frame.pack()
-        self.clear_frame.pack()
-        self.number789_frame.pack()
-        self.number456_frame.pack()
-        self.number123_frame.pack()
-        self.number0_frame.pack()
+        self.total_frame.pack()
+        self.frame.pack()
+        
 
     #this function toggles the comma display on the calculator, it looks to see if the memory variable if it already has commas
     # if it does, it strips them out with repace method. Then sets that back to memory, if it didnt find commas in stirng, then

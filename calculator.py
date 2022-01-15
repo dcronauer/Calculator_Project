@@ -14,6 +14,7 @@ def main():
     instance = Calculator_Gui(height,width,current_dpi)
     #setup main loop   
     tkinter.mainloop()
+#this function creates a window full screen in window in order to get the size of the display then returns height, width, and dpi
 def get_display_size():
         root = tkinter.Tk()
         root.update_idletasks()
@@ -27,19 +28,20 @@ def get_display_size():
         return height, width, current_dpi
 #create gui class
 class Calculator_Gui:
+    # x and y are for padding h and w are for sizing buttons then we have bg color and fontsize
     x = 2
     y = 7   
     h = 25
-    w =6
+    w = 6
     bg_color_body = '#FFA9A3'
     font_size = 16
     
     
     
-    
+    #the init gets window dimensions, creates window, creates memory varibales and creates the gui items
     def __init__(self,height,width,current_dpi):
         print(height,width,current_dpi)
-        height1, width1, x, y = self.get_dimensions(height,width)
+        height1, width1, x, y,h_factor,w_factor = self.get_dimensions(height,width)
         print(height1,width1)
         self.main_window = tkinter.Tk()
 
@@ -53,7 +55,9 @@ class Calculator_Gui:
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
         #self.reg = self.main_window.register(self.check_digit)
-        self.create_objects(height1,width1)
+        self.create_objects(height1,width1,w_factor,h_factor)
+    #this helps create the same size calculator app no matter what resolution is being used. This is currently funciton for 
+    #larger screens, I havent adapted to mobile or tablet size yet. It is in python though so that might not happen.
     def get_dimensions(self,height,width):
         #1080 815px height by 1084 width, 2K  823 height 1113px width
         if height >490 and width>790:
@@ -63,15 +67,16 @@ class Calculator_Gui:
             width1 = int(width/w_factor)
             x = 100
             y = 5
-            return height1, width1, x, y
+            return height1, width1, x, y, h_factor, w_factor
         else:
             return 750, 1000,100,5    
-       
-    def create_objects(self,height1,width1):
+    #this function creates all the widgets for display, puts them in frames, and packs the widgets and frames   
+    def create_objects(self,height1,width1,w_factor,h_factor):
+        #working with styles to avoid changing each item individually, also ttk items do not have all the functionality to change inline
         s = ttk.Style()
         s.theme_use('alt')
         #background="#B9E6FF"
-        s.configure('TButton', foreground='black', font=("Calibri",self.font_size), background="#B9E6FF",height=self.h, width=self.w)
+        s.configure('TButton', foreground='black', font=("Calibri",self.font_size), background="#B9E6FF",height=(self.h), width=(self.w))
         s.configure('TFrame',background=self.bg_color_body)
         s.configure('TLabel',background=self.bg_color_body)
         s.configure('Equal.TButton', background='#5C95FF')
@@ -96,7 +101,7 @@ class Calculator_Gui:
         self.memory_box2 = ttk.Label(self.display_frame,textvariable=self.memory2, width=15)
         self.operator_box = ttk.Label(self.display_frame,textvariable=self.operator, width=1)
 
-        #keyboard bind upon hitting enter run self.calculate_event
+        #keyboard bind upon hitting enter run self.event
         self.main_window.bind('<Return>', lambda event: self.calculate())
         self.main_window.bind('+', lambda event: self.add())
         self.main_window.bind('-', lambda event: self.minus())
@@ -118,7 +123,10 @@ class Calculator_Gui:
         self.main_window.bind('9',lambda event: self.button_9())
         self.main_window.bind('0',lambda event: self.button_0())
         self.main_window.bind('.', lambda event: self.decimal())
-        #self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup 
+        #self.memory_box.bind("<KeyRelease>",lambda event: self.change()) #keyup  this was an old method of displaying numbers in event widget
+        # couldnt get commas to work so i went a different direction to have a label display the memory variable and use binds to call the button funcitions
+        #rather than have both the button and keyboard strokes work on the event widget and using the self.change function which would handle adding to string
+        #if it was a digit, or decimal
         #pack display frame
         self.operator_box.pack(side="left",ipady=25)
         self.memory_box2.pack(side="left",ipady=25)
@@ -191,10 +199,10 @@ class Calculator_Gui:
         self.number456_frame.pack()
         self.number123_frame.pack()
         self.number0_frame.pack()
-        
-        self.memory_box.focus()
-    
-    
+
+    #this function toggles the comma display on the calculator, it looks to see if the memory variable if it already has commas
+    # if it does, it strips them out with repace method. Then sets that back to memory, if it didnt find commas in stirng, then
+    # it adds them     
     def comma(self,event=None):
         comma_toggle = ''
         string = self.memory.get()
@@ -214,7 +222,8 @@ class Calculator_Gui:
                 self.memory.set(str(string))
             except Exception as error:
                 print(error)
-       
+    #this pulls the memory variable, then takes out any commas in order to turn the memory to a float, then round it and set the memory back to 
+    # the rounded comma less version   
     def round(self):
         string = self.memory.get()
         string_replace = string.replace(',','')
@@ -224,7 +233,9 @@ class Calculator_Gui:
         # self.memory_box.focus()
         # self.memory_box.icursor('end')
 
-    #validate string
+    #validate string this was an old method to used the event widget and allow for both keyboard entry and button entry.
+    #it was rather intensive, and I found an easier way by attaching the memory variable to a label so the keyboard could not
+    #interact with the widget and instead just use keybinds to call the functions desired.
     
     # def change(self, event=None):
         
@@ -258,6 +269,8 @@ class Calculator_Gui:
 
                            
     #add a number to entry widget based on hitting one of the calculator buttons
+    #these functions used to ineract with a entry widget so I left the box focus and i cursor end in
+    #if I ever moved back you would uncomment those lines so the cursor would stay at the right whenever you called
     def button_1(self, event=None):
         string = self.memory.get() + "1"
         self.memory.set(string)
@@ -308,6 +321,9 @@ class Calculator_Gui:
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    # the decimal function degines a lock variable as blank, then runs thourgh the variable string if it finds a comma
+    #it sets lock variable to true. Then if its true it passes on, but if it doesnt turn to true, then it adds the decimal to the
+    #display label
     def decimal(self,event=None):
         lock = ''
         string = self.memory.get()
@@ -325,7 +341,11 @@ class Calculator_Gui:
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
 
-    #operator functions
+    #operator functions these funcitons remove commas before turning memory variable to a float for calculation
+    #this function sets the operator variable to add then it clears the self.memory variable for the next item in the expression
+    #it also sets the memory2 variable to be the value of the original value in self.memory. there are two other labels for 
+    #displaying the operator and memory2 so you can see how your new value entered in the memory label will interact once you hit enter
+    #to evaluate this same concept applies to add, minus, divide, and multiply
     def add(self,event=None):
         
         try:
@@ -412,8 +432,13 @@ class Calculator_Gui:
                 self.memory.set('')
                 # self.memory_box.focus()
           
-             
+    #upon hitting enter or hitting the equal button the calcualtor will
+    # get the operator, memory and memrory2 varibles and evaluate them based on the
+    # operator chose.          
     def calculate(self):
+        string = self.memory.get()
+        string_replace = string.replace(',','')
+        self.memory.set(string_replace)
         if self.operator.get() == '+':
             result = float(self.memory.get()) + float(self.memory2.get()) 
         elif self.operator.get() == '-':
@@ -447,7 +472,7 @@ class Calculator_Gui:
        
         else:
             return False"""
-        
+    #the toggle function takes the varaible in memory and turns it from negative to positive or the inverse depending on its current state    
     def toggle(self,event=None):
         try:
             string = self.memory.get()

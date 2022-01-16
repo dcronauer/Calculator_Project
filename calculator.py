@@ -3,7 +3,6 @@
 #import tkinter and tkk
 from cgitb import text
 import tkinter
-from tkinter import Tk
 from tkinter import BOTH, ttk
 from tkinter import font
 from tkinter.constants import LEFT, RIGHT
@@ -55,7 +54,7 @@ class CalculatorGui:
         self.main_window.geometry()
         self.main_window.title("Calculator")
         self.main_window.configure(bg=self.bg_color_body)
-        #self.main_window.minsize(width1,height1)
+        self.main_window.minsize(width1,height1)
         #set up memeory variables
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
@@ -83,6 +82,7 @@ class CalculatorGui:
         #working with styles to avoid changing each item individually, also ttk items do not have all the functionality to change inline
         #set grid scaling
         self.main_window.grid_rowconfigure(0,weight=1)
+        self.main_window.grid_rowconfigure(1,weight=1)
         self.main_window.grid_columnconfigure(0,weight=1)
         s = ttk.Style()
         s.theme_use('alt')
@@ -101,7 +101,10 @@ class CalculatorGui:
         #create frames
         self.frame = ttk.Frame(self.main_window,style="buttons.TFrame")
         self.total_frame = ttk.Frame(self.main_window)
-        
+        self.total_frame.grid_columnconfigure(2,weight=1)
+        self.total_frame.grid_columnconfigure(1,weight=1)
+        self.total_frame.grid_rowconfigure(0,weight=1)
+       
 
         self.frame.grid_columnconfigure(0,weight=1)
         self.frame.grid_columnconfigure(1,weight=1)
@@ -143,9 +146,9 @@ class CalculatorGui:
         
 
         #create and pack display frame
-        self.memory_box = ttk.Label(self.total_frame,textvariable=self.memory,style="memory.TLabel").grid(row=0,column=2)
-        self.memory_box2 = ttk.Label(self.total_frame,textvariable=self.memory2, width=15).grid(row=0,column=1)
-        self.operator_box = ttk.Label(self.total_frame,textvariable=self.operator, width=1).grid(row=0,column=0)
+        self.memory_box = ttk.Label(self.total_frame,textvariable=self.memory,style="memory.TLabel").grid(row=0,column=2,sticky="nsew")
+        self.memory_box2 = ttk.Label(self.total_frame,textvariable=self.memory2, width=15).grid(row=0,column=1,sticky="nsew")
+        self.operator_box = ttk.Label(self.total_frame,textvariable=self.operator, width=1).grid(row=0,column=0,sticky="nsew")
         
         #create clear button and +/- frame
         self.clear_button = ttk.Button(self.frame,text="C",command=self.clear).grid(row=0,column=0, sticky="nsew")

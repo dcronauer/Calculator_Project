@@ -3,18 +3,23 @@
 #import tkinter and tkk
 from cgitb import text
 import tkinter
-from tkinter import ttk
+from tkinter import Tk
+from tkinter import BOTH, ttk
 from tkinter import font
 from tkinter.constants import LEFT, RIGHT
-#from tkinter.constants import END, FALSE
+
+#orginal DPI
 ORIGINAL_DPI = 96
+
 #main function will create gui window, objects, start mainloop
 def main():
     #run instance
     height, width, current_dpi = get_display_size()
-    instance = Calculator_Gui(height,width,current_dpi)
+    instance = CalculatorGui(height,width,current_dpi)
     #setup main loop   
     tkinter.mainloop()
+
+
 #this function creates a window full screen in window in order to get the size of the display then returns height, width, and dpi
 def get_display_size():
         root = tkinter.Tk()
@@ -27,8 +32,10 @@ def get_display_size():
         print(current_dpi)
         root.destroy()
         return height, width, current_dpi
+
+
 #create gui class
-class Calculator_Gui:
+class CalculatorGui:
     # x and y are for padding h and w are for sizing buttons then we have bg color and fontsize
     x = 2
     y = 7   
@@ -37,26 +44,25 @@ class Calculator_Gui:
     bg_color_body = '#FFA9A3'
     font_size = 16
     
-    
-    
     #the init gets window dimensions, creates window, creates memory varibales and creates the gui items
     def __init__(self,height,width,current_dpi):
         print(height,width,current_dpi)
         height1, width1, x, y,h_factor,w_factor = self.get_dimensions(height,width)
         print(height1,width1)
+        
         self.main_window = tkinter.Tk()
-
-        geometry = "%dx%d+%d+%d" % (width1,height1,x,y)
-        self.main_window.geometry(geometry)
+        #geometry = "%dx%d+%d+%d" % (width1,height1,x,y)
+        self.main_window.geometry()
         self.main_window.title("Calculator")
         self.main_window.configure(bg=self.bg_color_body)
-        self.main_window.minsize(width1,height1)
-        
+        #self.main_window.minsize(width1,height1)
+        #set up memeory variables
         self.memory = tkinter.StringVar()
         self.memory2 = tkinter.StringVar()
         self.operator = tkinter.StringVar()
         #self.reg = self.main_window.register(self.check_digit)
         self.create_objects(height1,width1,w_factor,h_factor)
+    
     #this helps create the same size calculator app no matter what resolution is being used. This is currently funciton for 
     #larger screens, I havent adapted to mobile or tablet size yet. It is in python though so that might not happen.
     def get_dimensions(self,height,width):
@@ -71,14 +77,18 @@ class Calculator_Gui:
             return height1, width1, x, y, h_factor, w_factor
         else:
             return 750, 1000,100,5    
+    
     #this function creates all the widgets for display, puts them in frames, and packs the widgets and frames   
     def create_objects(self,height1,width1,w_factor,h_factor):
         #working with styles to avoid changing each item individually, also ttk items do not have all the functionality to change inline
+        #set grid scaling
+        self.main_window.grid_rowconfigure(0,weight=1)
+        self.main_window.grid_columnconfigure(0,weight=1)
         s = ttk.Style()
         s.theme_use('alt')
-        #background="#B9E6FF"
         s.configure('TButton', foreground='black', font=("Calibri",self.font_size), background="#B9E6FF",height=(self.h), width=(self.w))
-        s.configure('TFrame',background=self.bg_color_body)
+        s.configure('TFrame',background="red")
+        s.configure('buttons.TFrame',background="yellow")
         s.configure('TLabel',background=self.bg_color_body)
         s.configure('Equal.TButton', background='#5C95FF')
         s.map('TButton',
@@ -87,12 +97,21 @@ class Calculator_Gui:
                     ('active', '#FFA9A3')])
         s.configure('TLabel', foreground='grey', font =('Calibri,26'), background="#FFF",anchor="e",width=15)
         s.configure('memory.TLabel', foreground='black', font =('Calibri,26'), background="#FFF", width=15)
+        
         #create frames
-        self.frame = tkinter.Frame(self.main_window)
-        self.total_frame = tkinter.Frame(self.main_window)
-       
+        self.frame = ttk.Frame(self.main_window,style="buttons.TFrame")
+        self.total_frame = ttk.Frame(self.main_window)
         
 
+        self.frame.grid_columnconfigure(0,weight=1)
+        self.frame.grid_columnconfigure(1,weight=1)
+        self.frame.grid_columnconfigure(2,weight=1)
+        self.frame.grid_columnconfigure(3,weight=1)
+        self.frame.grid_rowconfigure(0,weight=1)
+        self.frame.grid_rowconfigure(1,weight=1)
+        self.frame.grid_rowconfigure(2,weight=1)
+        self.frame.grid_rowconfigure(3,weight=1)
+        self.frame.grid_rowconfigure(4,weight=1)
         #keyboard bind upon hitting enter run self.event
         self.main_window.bind('<Return>', lambda event: self.calculate())
         self.main_window.bind('+', lambda event: self.add())
@@ -120,46 +139,52 @@ class Calculator_Gui:
         #rather than have both the button and keyboard strokes work on the event widget and using the self.change function which would handle adding to string
         #if it was a digit, or decimal
         
+        
+        
+
         #create and pack display frame
         self.memory_box = ttk.Label(self.total_frame,textvariable=self.memory,style="memory.TLabel").grid(row=0,column=2)
-        #self.memory_box.config(validate="key",validatecommand=(self.reg,"%P",'%d'))
         self.memory_box2 = ttk.Label(self.total_frame,textvariable=self.memory2, width=15).grid(row=0,column=1)
         self.operator_box = ttk.Label(self.total_frame,textvariable=self.operator, width=1).grid(row=0,column=0)
+        
         #create clear button and +/- frame
-        self.clear_button = ttk.Button(self.frame,text="C",command=self.clear).grid(row=1,column=0)
-        self.clearentry_button = ttk.Button(self.frame, text="CE", command=self.clear_entry).grid(row=1,column=1)
-        self.toggle_button = ttk.Button(self.frame,text="+/-",command=self.toggle).grid(row=1,column=2)
-        self.round_button = ttk.Button(self.frame,text="Round",command=self.round).grid(row=1,column=3)
+        self.clear_button = ttk.Button(self.frame,text="C",command=self.clear).grid(row=0,column=0, sticky="nsew")
+        self.clearentry_button = ttk.Button(self.frame, text="CE", command=self.clear_entry).grid(row=0,column=1,sticky="nsew")
+        self.toggle_button = ttk.Button(self.frame,text="+/-",command=self.toggle).grid(row=0,column=2,sticky="nsew")
+        self.round_button = ttk.Button(self.frame,text="Round",command=self.round).grid(row=0,column=3,sticky="nsew")
 
         #create the buttons 123
-        self.button1 = ttk.Button(self.frame,text="1",command=self.button_1).grid(row=4,column=0)
-        self.button2 = ttk.Button(self.frame,text="2",command=self.button_2 ).grid(row=4,column=1)
-        self.button3 = ttk.Button(self.frame,text="3",command=self.button_3 ).grid(row=4,column=2)
-        self.button_plus = ttk.Button(self.frame,text="+",command=self.add ).grid(row=4,column=3)
+        self.button1 = ttk.Button(self.frame,text="1",command=self.button_1).grid(row=3,column=0,sticky="nsew")
+        self.button2 = ttk.Button(self.frame,text="2",command=self.button_2 ).grid(row=3,column=1,sticky="nsew")
+        self.button3 = ttk.Button(self.frame,text="3",command=self.button_3 ).grid(row=3,column=2,sticky="nsew")
+        self.button_plus = ttk.Button(self.frame,text="+",command=self.add ).grid(row=3,column=3,sticky="nsew")
         
         #create the buttons 456
-        self.button4 = ttk.Button(self.frame,text="4",command=self.button_4).grid(row=3,column=0)
-        self.button5 = ttk.Button(self.frame,text="5",command=self.button_5 ).grid(row=3,column=1)
-        self.button6 = ttk.Button(self.frame,text="6",command=self.button_6 ).grid(row=3,column=2)
-        self.button_minus = ttk.Button(self.frame,text="-",command=self.minus).grid(row=3,column=3)
+        self.button4 = ttk.Button(self.frame,text="4",command=self.button_4).grid(row=2,column=0,sticky="nsew")
+        self.button5 = ttk.Button(self.frame,text="5",command=self.button_5 ).grid(row=2,column=1,sticky="nsew")
+        self.button6 = ttk.Button(self.frame,text="6",command=self.button_6 ).grid(row=2,column=2,sticky="nsew")
+        self.button_minus = ttk.Button(self.frame,text="-",command=self.minus).grid(row=2,column=3,sticky="nsew")
         
         #create the buttons 789
-        self.button7 = ttk.Button(self.frame,text="7",command=self.button_7).grid(row=2,column=0)
-        self.button8 = ttk.Button(self.frame,text="8",command=self.button_8).grid(row=2,column=1)
-        self.button9 = ttk.Button(self.frame,text="9",command=self.button_9).grid(row=2,column=2)
-        self.button_times = ttk.Button(self.frame,text="*",command=self.multiply).grid(row=2,column=3)
+        self.button7 = ttk.Button(self.frame,text="7",command=self.button_7).grid(row=1,column=0,sticky="nsew")
+        self.button8 = ttk.Button(self.frame,text="8",command=self.button_8).grid(row=1,column=1,sticky="nsew")
+        self.button9 = ttk.Button(self.frame,text="9",command=self.button_9).grid(row=1,column=2,sticky="nsew")
+        self.button_times = ttk.Button(self.frame,text="*",command=self.multiply).grid(row=1,column=3,sticky="nsew")
 
         #create the buttons 0 equal .
-        self.button0 = ttk.Button(self.frame,text="0",command=self.button_0,).grid(row=5,column=1)
-        self.button_equal =ttk.Button(self.frame,text="=",command=self.calculate,style='Equal.TButton').grid(row=5,column=0)
-        self.button_decimal = ttk.Button(self.frame,text='.',command=self.decimal).grid(row=5,column=2)
-        self.button_divide = ttk.Button(self.frame,text="/",command=self.divide).grid(row=5,column=3)
+        self.button0 = ttk.Button(self.frame,text="0",command=self.button_0,).grid(row=4,column=1,sticky="nsew")
+        self.button_equal =ttk.Button(self.frame,text="=",command=self.calculate,style='Equal.TButton').grid(row=4,column=0,sticky="nsew")
+        self.button_decimal = ttk.Button(self.frame,text='.',command=self.decimal).grid(row=4,column=2,sticky="nsew")
+        self.button_divide = ttk.Button(self.frame,text="/",command=self.divide).grid(row=4,column=3,sticky="nsew") 
 
-        #pack the frames
-        self.total_frame.pack()
-        self.frame.pack()
+    
+
+        # #pack the frames
+        self.total_frame.grid(row=0,column=0,sticky="nsew")
+        self.frame.grid(row=1,column=0,sticky="nsew")
+        # self.total_frame.pack()
+        # self.frame.pack()
         
-
     #this function toggles the comma display on the calculator, it looks to see if the memory variable if it already has commas
     # if it does, it strips them out with repace method. Then sets that back to memory, if it didnt find commas in stirng, then
     # it adds them     
@@ -182,6 +207,7 @@ class Calculator_Gui:
                 self.memory.set(str(string))
             except Exception as error:
                 print(error)
+    
     #this pulls the memory variable, then takes out any commas in order to turn the memory to a float, then round it and set the memory back to 
     # the rounded comma less version   
     def round(self):
@@ -192,41 +218,6 @@ class Calculator_Gui:
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor('end')
-
-    #validate string this was an old method to used the event widget and allow for both keyboard entry and button entry.
-    #it was rather intensive, and I found an easier way by attaching the memory variable to a label so the keyboard could not
-    #interact with the widget and instead just use keybinds to call the functions desired.
-    
-    # def change(self, event=None):
-        
-        
-    #     string = str(self.memory.get())
-        
-    #     length = len(string)
-        
-    #     if len(string)> 1 and string[0] == "-":
-    #         string2 = '-'
-    #     else:    
-    #         string2 = ""
-    #     count = 0
-        
-    #     for letter in string:
-    #         if letter.isdigit():
-                
-    #             string2 = string2 + letter
-               
-                
-                
-    #         elif letter == ".":
-    #             if count == 0:
-    #                 string2 = string2 + letter    
-    #                 count +=1
-                    
-       
-    #     self.memory.set(string2)
-    #     self.memory_box.focus()
-    #     self.memory_box.icursor("end")   
-
                            
     #add a number to entry widget based on hitting one of the calculator buttons
     #these functions used to ineract with a entry widget so I left the box focus and i cursor end in
@@ -236,51 +227,61 @@ class Calculator_Gui:
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_2(self, event=None):
         string = self.memory.get() + "2"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_3(self, event=None):
         string = self.memory.get() + "3"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_4(self, event=None):
         string = self.memory.get() + "4"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_5(self, event=None):
         string = self.memory.get() + "5"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_6(self, event=None):
         string = self.memory.get() + "6"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_7(self, event=None):
         string = self.memory.get() + "7"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_8(self, event=None):
         string = self.memory.get() + "8"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_9(self, event=None):
         string = self.memory.get() + "9"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     def button_0(self, event=None):
         string = self.memory.get() + "0"
         self.memory.set(string)
         # self.memory_box.focus()
         # self.memory_box.icursor("end")
+    
     # the decimal function degines a lock variable as blank, then runs thourgh the variable string if it finds a comma
     #it sets lock variable to true. Then if its true it passes on, but if it doesnt turn to true, then it adds the decimal to the
     #display label
@@ -293,8 +294,6 @@ class Calculator_Gui:
                 lock = True
         if lock == True:
             print("too many decimals")   
-            
-
         else:
             string = string + "."
             self.memory.set(string)
@@ -417,21 +416,17 @@ class Calculator_Gui:
         self.operator.set('')   
         # self.memory_box.focus()
         # self.memory_box.icursor("end") 
+    
     def clear(self,event=None):
         self.memory.set('')
         self.memory2.set('')
         self.operator.set('')
         # self.memory_box.focus()
+    
     def clear_entry(self,event=None):
         self.memory.set('')
         # self.memory_box.focus()
-    """def check_digit(self,p,d):
-        
-        if p.isdigit():
-            return True 
-       
-        else:
-            return False"""
+   
     #the toggle function takes the varaible in memory and turns it from negative to positive or the inverse depending on its current state    
     def toggle(self,event=None):
         try:

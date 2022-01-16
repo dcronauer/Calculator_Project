@@ -4,7 +4,6 @@ making a calculator in python with tkinter
 The * key multiplies  
 
 The - key subtracts  
-
 The + key adds  
 
 The / key divides  
